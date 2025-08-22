@@ -1,0 +1,35 @@
+<template>
+    <lightning-card title="Account Search">
+        <!-- Search Bar -->
+        <div class="slds-p-around_medium">
+            <lightning-input type="text" label="Search Account" value={searchKey} onchange={handleChange}></lightning-input>
+            <lightning-button label="Search" variant="destructive" onclick={handleSearch}></lightning-button>
+        </div>
+
+        <!-- Results -->
+        <template if:true={accounts}>
+            <template for:each={accounts} for:item="acc">
+                <div key={acc.Id} class="slds-m-around_medium">
+
+                    <!-- Contacts Table -->
+                    <h3 class="slds-text-heading_small slds-m-top_small">Account Related Contacts</h3>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={acc.Contacts}
+                        columns={contactColumns}
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+
+                    <!-- Opportunities Table -->
+                    <h3 class="slds-text-heading_small slds-m-top_small">Account Related Opportunities</h3>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={acc.Opportunities}
+                        columns={opportunityColumns}
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>
