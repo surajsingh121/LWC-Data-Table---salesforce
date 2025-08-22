@@ -1,0 +1,34 @@
+/**
+* @File Name : AccountSearchController.cls
+* @Description :
+* @Author :
+* @Last Modified By :
+* @Last Modified On : August 21, 2025
+* @Modification Log :
+*==============================================================================
+* Ver | Date | Author | Modification
+*==============================================================================
+* 1.0 | August 21, 2025 |   | Initial Version
+**/
+
+public with sharing class AccountSearchController {
+    
+    @AuraEnabled(cacheable=true)
+    public static List<Account> searchAccounts(String searchKey) {
+        return [
+            SELECT Id, Name, Industry, Phone,
+                   (SELECT Id, Name, Email, Phone FROM Contacts),
+                   (SELECT Id, Name, StageName, Amount, CloseDate FROM Opportunities)
+            FROM Account
+            WHERE Name LIKE :('%' + searchKey + '%')
+            
+        ];
+    }
+    
+    @AuraEnabled
+    public static void deleteRecord(Id recordId, String sObjectName) {
+        if(recordId != null && sObjectName != null){
+            Database.delete(Database.query('SELECT Id FROM ' + sObjectName + ' WHERE Id = :recordId'));
+        }
+    }
+}
